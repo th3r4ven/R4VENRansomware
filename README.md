@@ -19,3 +19,5 @@ Dont forget to put an / at the end.
 Eg.: <br>"/home/kali/Documents/" <br>
      "/"<br>
      "/var/www/html/"
+<br>
+**Will be updates**
