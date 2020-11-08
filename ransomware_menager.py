@@ -5,22 +5,18 @@
 
 from Crypto.Cipher import AES
 import base64
-from genPassword import get_random_string
-import unidecode
 import sys
-
-
-def createCryptKey():
-    return get_random_string(16)
+import re
 
 
 def getKey():
     try:
-        return sys.argv[1]
+        if len(sys.argv[1]) == 32:
+            return sys.argv[1]
+        else:
+            exit()
     except IndexError:
-        key = get_random_string(16)
-        print("Senha da criptografia: " + key)
-        return key
+        exit()
 
 
 def crypt(texto_limpo):
@@ -30,30 +26,44 @@ def crypt(texto_limpo):
     # =================================================================================================================
 
     chave = getKey()
+    dado64 = base64.b64encode(texto_limpo)
+    texto_limpo = dado64.decode('utf-8')
     teste = True
     cont = len(texto_limpo)
+    falta = 0
     while teste:
-        if (cont % 16) == 0:
+        if (cont % 256) == 0:
             teste = False
         else:
+            texto_limpo = texto_limpo + "1"
+            falta += 1
             cont += 1
     # SYMMETRIC_DATA
     aes = AES.new(chave, AES.MODE_ECB)
-    cryptado = aes.encrypt(texto_limpo.rjust(cont))  # CRYPTED_DATA
+    cryptado = aes.encrypt(texto_limpo)  # CRYPTED_DATA
     cryptado = base64.b64encode(cryptado)  # B64ENCODED_DATA
-    return cryptado.decode()  # 64ENCODED_DATA
+    cryptado = cryptado + ";;;;;;;".encode('ascii') + str(falta).encode('ascii')
+    return cryptado  # 64ENCODED_DATA
 
 
-def decrypt(texto_crypto, key):
+def decrypt(texto_crypto):
     # =================================================================================================================
     # ◥◤  DECRYPT STEP BY STEP  ◥◤
     # ▶▶▶▶▶ 64ENCODED_DATA -> B64ENCODED_DATA -> CRYPTED_DATA -> BINARY_DATA -> SYMMETRIC_DATA -> DATA ◀◀◀◀◀
     # =================================================================================================================
 
-    aes = AES.new(key, AES.MODE_ECB)
-    texto_crypto = texto_crypto.encode()  # B64ENCODED_DATA
-    texto_crypto = base64.b64decode(texto_crypto)  # CRYPTED_DATA
-    texto_limpo = aes.decrypt(texto_crypto)  # BINARY_DATA
-    texto_limpo = texto_limpo.decode('utf-8')  # SYMMETRIC_DATA
-    texto_limpo = texto_limpo.lstrip()  # DATA
-    return texto_limpo.encode()
+    aes = AES.new(getKey(), AES.MODE_ECB)
+
+    if re.search(b';;;;;;;', texto_crypto):
+        cryptData = texto_crypto.split(b';;;;;;;')[0]
+        bits = texto_crypto.split(b';;;;;;;')[1].decode('ascii')
+        cryptData = base64.b64decode(cryptData)
+        descriptado = aes.decrypt(cryptData)
+        descriptadob64 = descriptado.decode('ascii')
+        original = ""
+        for x in range(1, (int(bits) + 1)):
+            original = descriptadob64[:-1]
+
+        original = original.encode('ascii')
+        original = base64.b64decode(original)
+        return original
