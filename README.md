@@ -5,8 +5,9 @@ It is supposed to all type of files.
 
 # How to run:
 
-You can run by typing **python R4VEN_ransomware.py jZdlru6Z98OH3xysZNaM9IzDiKJhZEK5**
+You can run by typing **python R4VEN_ransomware.py (KEY)**
 
+OBS: **Without (), you can put any key that you want, but need to be length of 32 caracters**
 
 The Crypt key needs to be via argument (You can change that in source code)...
 
