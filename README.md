@@ -1,7 +1,7 @@
 # R4VEN Ransomware
 Simple ransomware, encrypt data via assymetric AES-ECB 256 encrypt
 
-It is supposed to all type of files. 
+It is supposed encrypt to all type of files. 
 
 # How to run:
 
