@@ -5,7 +5,7 @@ It is supposed to all type of files.
 
 # How to run:
 
-You can run by typing python R4VEN_ransomware.py jZdlru6Z98OH3xysZNaM9IzDiKJhZEK5
+You can run by typing **python R4VEN_ransomware.py jZdlru6Z98OH3xysZNaM9IzDiKJhZEK5**
 
 
 The Crypt key needs to be via argument (You can change that in source code)...
@@ -15,6 +15,6 @@ To chosse what directory that will be encrypted, you can modify that via code on
 
 Dont forget to put an / at the end.
 
-Eg.: "/home/kali/Documents/"
-     "/"
+Eg.: <br>"/home/kali/Documents/" <br>
+     "/"<br>
      "/var/www/html/"
