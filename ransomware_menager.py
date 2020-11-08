@@ -20,10 +20,6 @@ def getKey():
 
 
 def crypt(texto_limpo):
-    # =================================================================================================================
-    # ◥◤  CRYPT STEP BY STEP  ◥◤
-    # ▶▶▶▶▶ DATA -> CLEAN_DATA -> SYMMETRIC_DATA -> CRYPTED_DATA -> B64ENCODED_DATA -> 64ENCODED_DATA ◀◀◀◀◀
-    # =================================================================================================================
 
     chave = getKey()
     dado64 = base64.b64encode(texto_limpo)
@@ -47,11 +43,7 @@ def crypt(texto_limpo):
 
 
 def decrypt(texto_crypto):
-    # =================================================================================================================
-    # ◥◤  DECRYPT STEP BY STEP  ◥◤
-    # ▶▶▶▶▶ 64ENCODED_DATA -> B64ENCODED_DATA -> CRYPTED_DATA -> BINARY_DATA -> SYMMETRIC_DATA -> DATA ◀◀◀◀◀
-    # =================================================================================================================
-
+    
     aes = AES.new(getKey(), AES.MODE_ECB)
 
     if re.search(b';;;;;;;', texto_crypto):
