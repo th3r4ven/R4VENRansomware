@@ -19,7 +19,11 @@ def getKey():
         exit()
 
 
-def crypt(texto_limpo):
+def crypt(texto_limpo, ext=""):
+    # =================================================================================================================
+    # ◥◤  CRYPT STEP BY STEP  ◥◤
+    # ▶▶▶▶▶ DATA -> CLEAN_DATA -> SYMMETRIC_DATA -> CRYPTED_DATA -> B64ENCODED_DATA -> 64ENCODED_DATA ◀◀◀◀◀
+    # =================================================================================================================
 
     chave = getKey()
     dado64 = base64.b64encode(texto_limpo)
@@ -38,24 +42,31 @@ def crypt(texto_limpo):
     aes = AES.new(chave, AES.MODE_ECB)
     cryptado = aes.encrypt(texto_limpo)  # CRYPTED_DATA
     cryptado = base64.b64encode(cryptado)  # B64ENCODED_DATA
-    cryptado = cryptado + ";;;;;;;".encode('ascii') + str(falta).encode('ascii')
+    cryptado = cryptado + ";;;;;;;".encode('ascii') + str(falta).encode('ascii') + ",,,,,,,".encode('ascii') + str(ext).encode('ascii')
     return cryptado  # 64ENCODED_DATA
 
 
 def decrypt(texto_crypto):
-    
+    # =================================================================================================================
+    # ◥◤  DECRYPT STEP BY STEP  ◥◤
+    # ▶▶▶▶▶ 64ENCODED_DATA -> B64ENCODED_DATA -> CRYPTED_DATA -> BINARY_DATA -> SYMMETRIC_DATA -> DATA ◀◀◀◀◀
+    # =================================================================================================================
+
     aes = AES.new(getKey(), AES.MODE_ECB)
 
     if re.search(b';;;;;;;', texto_crypto):
+
         cryptData = texto_crypto.split(b';;;;;;;')[0]
-        bits = texto_crypto.split(b';;;;;;;')[1].decode('ascii')
+        preBit = texto_crypto.split(b';;;;;;;')[1]
+        bits = preBit.split(b',,,,,,,')[0].decode('ascii')
+        ext = preBit.split(b',,,,,,,')[1].decode('ascii')
         cryptData = base64.b64decode(cryptData)
         descriptado = aes.decrypt(cryptData)
         descriptadob64 = descriptado.decode('ascii')
         original = ""
-        for x in range(1, (int(bits) + 1)):
-            original = descriptadob64[:-1]
-
+        for x in range(1, (int(bits))):
+            original = original + "1"
+        original = descriptadob64.split(original)[0]
         original = original.encode('ascii')
         original = base64.b64decode(original)
-        return original
+        return [original, ext]

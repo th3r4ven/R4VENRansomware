@@ -13,5 +13,4 @@ def get_random_string(length):
     return result_str
 
 
-
-
+print(get_random_string(32))

