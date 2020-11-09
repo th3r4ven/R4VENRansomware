@@ -3,6 +3,9 @@ Simple ransomware, encrypt data via symetric AES-ECB 256 encrypt
 
 It is supposed encrypt to all type of files. 
 
+Python Version: 3.8
+Libs: pycrypto, sys, so and re
+
 # How to run:
 
 You can run by typing **python R4VEN_ransomware.py (KEY)**
