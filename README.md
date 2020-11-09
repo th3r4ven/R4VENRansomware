@@ -3,8 +3,11 @@ Simple ransomware, encrypt data via symetric AES-ECB 256 encrypt
 
 It is supposed encrypt to all type of files. 
 
+Requirements:
 Python Version: 3.8
 Libs: pycrypto, sys, so and re
+
+**Generating Keys**: You can easily generate a new key running **genPassword.py.**
 
 # How to run:
 
